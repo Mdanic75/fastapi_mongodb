@@ -1,0 +1,36 @@
+version: "3.8"
+services:
+  web:
+    build: .
+    ports:
+      - "80:80"
+    volumes:
+      - .:/code
+    networks:
+      - app_net
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app_net
+
+volumes:
+  mongo-data:
+
+networks:
+  app_net:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.0.0/24
